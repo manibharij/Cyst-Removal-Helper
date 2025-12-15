@@ -1,0 +1,5 @@
+{
+  "name": "CystAssist",
+  "description": "A guided, deterministic interactive assistant for patients to understand cyst-related concerns in a safe, medically responsible manner.",
+  "requestFramePermissions": []
+}

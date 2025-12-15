@@ -30,23 +30,22 @@ const App: React.FC = () => {
   const handleStart = (nextId: string) => {
     setHistory([currentNodeId]);
     setCurrentNodeId(nextId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll the widget into view gently, not the whole page to top
+    const widget = document.getElementById('cyst-assist-widget');
+    if (widget) widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleAnswer = (nextId: string) => {
-    // Push current ID to history
     setHistory((prev) => [...prev, currentNodeId]);
-    // Advance to next
     setCurrentNodeId(nextId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const widget = document.getElementById('cyst-assist-widget');
+    if (widget) widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleBack = () => {
     if (history.length === 0) return;
     
-    // Create copy
     const newHistory = [...history];
-    // Pop last item
     const previousId = newHistory.pop();
     
     if (previousId) {
@@ -58,7 +57,8 @@ const App: React.FC = () => {
   const handleRestart = () => {
     setHistory([]);
     setCurrentNodeId(CLINIC_DATA.initialNodeId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const widget = document.getElementById('cyst-assist-widget');
+    if (widget) widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   // --- RENDER ---
@@ -97,15 +97,41 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] flex flex-col items-center font-sans">
-      <main className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 flex flex-col min-h-screen">
+    <div className="w-full bg-[#F7F9FC] flex flex-col items-center font-sans isolate">
+      {/* 
+        Manual CSS Reset:
+        Since we disabled Tailwind 'preflight' to save your WP site styles, 
+        we must manually restore box-sizing and border defaults for this widget only.
+      */}
+      <style>{`
+        #cyst-assist-widget {
+          font-family: 'Inter', sans-serif;
+          line-height: 1.5;
+          -webkit-font-smoothing: antialiased;
+        }
+        #cyst-assist-widget *, 
+        #cyst-assist-widget *::before, 
+        #cyst-assist-widget *::after {
+          box-sizing: border-box;
+          border-width: 0;
+          border-style: solid;
+          border-color: #e5e7eb; /* tailwind gray-200 */
+        }
+        #cyst-assist-widget button {
+          cursor: pointer;
+          background-color: transparent;
+          background-image: none;
+        }
+      `}</style>
+
+      <main className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 flex flex-col">
         {/* Main interactive area */}
         <div key={currentNodeId} className="w-full flex-grow"> 
           {renderCurrentView()}
         </div>
 
         {/* Footer Area */}
-        <div className="mt-auto">
+        <div className="mt-8">
           {/* Persistent Disclaimer */}
           <div className="mt-8 opacity-80 hover:opacity-100 transition-opacity">
             <Disclaimer />

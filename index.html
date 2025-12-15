@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Patient Help Centre</title>
+    <!-- Configure Tailwind to be safe for WordPress embedding -->
+    <script>
+      tailwind.config = {
+        // Increases specificity so WP styles don't override the app
+        important: '#cyst-assist-widget', 
+        corePlugins: {
+          // Disable global style resets to prevent breaking WP headers/footers
+          preflight: false, 
+        },
+        theme: {
+          extend: {}
+        }
+      }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -32,6 +46,7 @@
 </script>
 </head>
   <body class="bg-[#F7F9FC] text-[#0B1220] antialiased">
-    <div id="root"></div>
+    <!-- Unique ID to prevent conflicts with WordPress themes -->
+    <div id="cyst-assist-widget"></div>
   </body>
 </html>
